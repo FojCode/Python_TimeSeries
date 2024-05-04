@@ -21,7 +21,17 @@ def arma_autocorrelation(phi, theta):
     autocorr.append(rho)
 
   return autocorr
+# Example usage
+phi = 0.8
+theta = -0.5
+n_lags = 20  # Number of lags for autocorrelation
 
+theoretical_autocorr = arma_autocorrelation(phi, theta)
+
+# Print the first few theoretical autocorrelation values
+print("Theoretical Autocorrelation:")
+for i in range(min(n_lags, 10)):
+  print(f"Lag {i+1}: {theoretical_autocorr[i]:.4f}")
 
 # partial autocorrelation function 
 import numpy as np
