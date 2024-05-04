@@ -1,3 +1,54 @@
+# spectral density function 
+
+
+# spectral density function for a arma(p,q)
+import numpy as np
+from scipy.signal import welch
+from statsmodels.tsa.arma_model import ARMA
+
+def arma_simulated_psd(ar_params, ma_params, n_sims, fs=1.0, window="hann", nperseg=None):
+  """
+  This function simulates data from an ARMA(p,q) model and estimates its PSD.
+
+  Args:
+      ar_params: A list of AR coefficients.
+      ma_params: A list of MA coefficients (can be empty for pure AR).
+      n_sims: The number of data points to simulate.
+      fs: The sampling frequency (default 1.0).
+      window: The window function to use ("hann", "hamming", "blackman", etc., default "hann").
+      nperseg: The length of each window segment (default None, uses Welch's method).
+
+  Returns:
+      A tuple containing:
+          - Frequencies (f) in Hz
+          - Power spectral density (Pxx) in units^2 / Hz
+  """
+  model = ARMA(np.zeros(n_sims), order=(len(ar_params), len(ma_params)))
+  model.arparams = ar_params
+  model.maparams = ma_params
+  simulated_data = model.simulate(nsims=n_sims)
+
+  f, Pxx = welch(simulated_data, fs=fs, window=window, nperseg=nperseg)
+  return f, Pxx
+
+# Example usage (assuming you have estimated ARMA parameters)
+ar_params = [0.8]  # Example AR parameters
+ma_params = []  # Example MA parameters (pure AR here)
+n_sims = 1000  # Number of data points to simulate
+fs = 100  # Sampling frequency
+
+f, Pxx = arma_simulated_psd(ar_params, ma_params, n_sims, fs)
+
+# Plot results (using matplotlib)
+import matplotlib.pyplot as plt
+
+plt.semilogy(f, Pxx)
+plt.xlabel("Frequency (Hz)")
+plt.ylabel("Power spectral density (units^2 / Hz)")
+plt.title("Estimated PSD of ARMA(1,0) Model")
+plt.grid(True)
+plt.show()
+
 
 # inversion formula of a time series 
 def invert_differenced_series(data):
