@@ -1,4 +1,40 @@
 # spectral density function 
+import numpy as np
+from scipy.signal import welch
+
+def psd(data, fs=1.0, window="hann", nperseg=None):
+  """
+  This function estimates the power spectral density (PSD) of a time series.
+
+  Args:
+      data: A list of numerical values representing the time series.
+      fs: The sampling frequency of the time series (default 1.0).
+      window: The window function to use ("hann", "hamming", "blackman", etc., default "hann").
+      nperseg: The length of each window segment (default None, uses Welch's method).
+
+  Returns:
+      A tuple containing:
+          - Frequencies (f) in Hz
+          - Power spectral density (Pxx) in units^2 / Hz
+  """
+  f, Pxx = welch(data, fs=fs, window=window, nperseg=nperseg)
+  return f, Pxx
+
+# Example usage
+data = np.sin(2*np.pi*0.1*np.arange(100)) + np.random.rand(100)  # Sample data with sine wave and noise
+fs = 100  # Sampling frequency
+
+f, Pxx = psd(data.copy(), fs)
+
+# Plot results (using matplotlib)
+import matplotlib.pyplot as plt
+
+plt.semilogy(f, Pxx)
+plt.xlabel("Frequency (Hz)")
+plt.ylabel("Power spectral density (units^2 / Hz)")
+plt.title("Power Spectral Density of the Time Series")
+plt.grid(True)
+plt.show()
 
 
 # spectral density function for a arma(p,q)
