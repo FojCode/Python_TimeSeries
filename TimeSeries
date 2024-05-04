@@ -1,3 +1,23 @@
+# partial autocorrelation function for ma(1)
+
+import numpy as np
+from statsmodels.tsa.stattools import pacf
+
+def pacf_for_ma1(data, max_lag=None):
+  """
+  This function calculates the PACF of a time series data, emphasizing the theoretical result for MA(1).
+
+  Args:
+      data: A numpy array containing the time series data.
+      max_lag (int, optional): The maximum lag for which to compute the PACF. 
+          Defaults to None (calculates PACF for all lags).
+
+  Returns:
+      A numpy array containing the PACF values for each lag.
+  """
+
+  pacf_values = pacf(data, nlags=max_lag, method='ols')
+
 # spectral density function 
 import numpy as np
 from scipy.signal import welch
