@@ -18,6 +18,18 @@ def pacf_for_ma1(data, max_lag=None):
 
   pacf_values = pacf(data, nlags=max_lag, method='ols')
 
+  # Note for MA(1): Theoretical PACF is 0 for lags greater than 1
+  if isinstance(data, np.ndarray) and len(data) > 1:
+    pacf_values[2:] = 0  # Set PACF to 0 for lags > 1 (assuming MA(1))
+  
+  return pacf_values
+
+# Example usage
+data = np.random.rand(100)  # Generate some random data
+pacf = pacf_for_ma1(data, max_lag=20)
+
+print(pacf)  # This will print the PACF values for lags 0 to 19
+
 # spectral density function 
 import numpy as np
 from scipy.signal import welch
