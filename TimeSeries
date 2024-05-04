@@ -1,3 +1,24 @@
+# autocovariance function 
+import numpy as np
+
+def autocovariance(data, max_lag=None):
+  """
+  This function calculates the autocovariance of a time series data for a given maximum lag.
+
+  Args:
+      data: A numpy array containing the time series data.
+      max_lag (int, optional): The maximum lag for which to compute the autocovariance. 
+          Defaults to None (calculates autocovariance for all lags).
+
+  Returns:
+      A numpy array containing the autocovariance values for each lag.
+  """
+
+  n = len(data)
+  mean = np.mean(data)
+  autocov = np.zeros(max_lag or n)
+
+
 # autocorrelation function of a time series 
 import numpy as np
 
