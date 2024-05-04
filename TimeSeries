@@ -22,6 +22,7 @@ def partial_autocorrelation(data, max_lag=None):
 data = np.random.rand(100)  # Generate some random data
 pacf = partial_autocorrelation(data, max_lag=20)
 
+print(pacf)  # This will print the PACF values for lags 0 to 19
 
 # partial autocorrelation function for ma(1)
 
