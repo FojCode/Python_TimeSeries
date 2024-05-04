@@ -1,5 +1,92 @@
 
 # linear filters of a time series 
+import numpy as np
+from scipy.signal import filtfilt, butter, iirfilter
+
+def moving_average_filter(data, window_size):
+  """
+  This function applies a moving average filter to the time series.
+
+  Args:
+      data: A list of numerical values representing the time series.
+      window_size: The size of the moving average window (must be odd).
+
+  Returns:
+      The filtered time series.
+  """
+  if window_size % 2 == 0:
+    raise ValueError("Window size must be odd for moving average filter.")
+  weights = np.ones(window_size) / window_size
+  return filtfilt(weights, 1, data)  # filtfilt for causal filtering
+
+def butterworth_filter(data, cutoff_freq, fs, filter_type="lowpass"):
+  """
+  This function applies a Butterworth filter to the time series.
+
+  Args:
+      data: A list of numerical values representing the time series.
+      cutoff_freq: The cutoff frequency for the filter (normalized by sampling rate).
+      fs: The sampling frequency of the time series.
+      filter_type: The type of filter ("lowpass", "highpass", "bandpass", or "bandstop").
+
+  Returns:
+      The filtered time series.
+  """
+  nyq = fs / 2  # Nyquist frequency
+  normalized_cutoff = cutoff_freq / nyq
+  order, wn = butter(N=None, Wn=normalized_cutoff, btype=filter_type)
+  b, a = butter(order, wn)
+  return filtfilt(b, a, data)
+
+def iirfilter_design(data, f1, f2, fs, filter_type="bandpass"):
+  """
+  This function applies a custom IIR filter using the iirfilter function.
+
+  Args:
+      data: A list of numerical values representing the time series.
+      f1: Lower cutoff frequency for bandpass or bandstop filter (optional).
+      f2: Upper cutoff frequency for bandpass or bandstop filter (optional).
+      fs: The sampling frequency of the time series.
+      filter_type: The type of filter ("lowpass", "highpass", "bandpass", or "bandstop").
+
+  Returns:
+      The filtered time series.
+  """
+  nyq = fs / 2
+  if filter_type in ["bandpass", "bandstop"]:
+    f1_normalized = f1 / nyq
+    f2_normalized = f2 / nyq
+    b, a = iirfilter(filter_type, f1=f1_normalized, f2=f2_normalized)
+  else:
+    cutoff_freq = f1 / nyq  # Assuming f1 is the cutoff frequency for other filter types
+    b, a = iirfilter(filter_type, cutoff=cutoff_freq)
+  return filtfilt(b, a, data)
+
+# Example usage
+data = np.sin(2*np.pi*0.1*np.arange(100)) + np.random.rand(100)  # Sample data with sine wave and noise
+fs = 100  # Sampling frequency
+
+# Moving average filter
+filtered_data_ma = moving_average_filter(data.copy(), window_size=5)
+
+# Butterworth lowpass filter
+cutoff_freq = 0.2  # Normalized cutoff frequency (0 to 0.5)
+filtered_data_butter = butterworth_filter(data.copy(), cutoff_freq, fs)
+
+# Custom IIR bandpass filter
+f1 = 0.1  # Lower cutoff frequency
+f2 = 0.3  # Upper cutoff frequency
+filtered_data_iir = iirfilter_design(data.copy(), f1, f2, fs)
+
+# Plot results (using matplotlib)
+import matplotlib.pyplot as plt
+
+plt.plot(data, label="Original data")
+plt.plot(filtered_data_ma, label="Moving average")
+plt.plot(filtered_data_butter, label="Butterworth lowpass")
+plt.plot(filtered_data_iir, label="Custom IIR bandpass")
+plt.legend()
+plt.show()
 
 
 # Ljung and Box portmanteau test of residuals 
