@@ -17,7 +17,19 @@ def autocovariance(data, max_lag=None):
   n = len(data)
   mean = np.mean(data)
   autocov = np.zeros(max_lag or n)
+for lag in range(max_lag or n):
+    if lag == 0:
+      autocov[lag] = np.var(data)  # Autocovariance at lag 0 is the variance
+    else:
+      autocov[lag] = np.sum((data[:-lag] - mean) * (data[lag:] - mean)) / (n - lag)
 
+  return autocov
+
+# Example usage
+data = np.random.rand(100)  # Generate some random data
+autocov = autocovariance(data, max_lag=20)
+
+print(autocov)  # This will print the autocovariance values for lags 0 to 19
 
 # autocorrelation function of a time series 
 import numpy as np
