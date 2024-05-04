@@ -1,4 +1,26 @@
 
+# inversion formula of a time series 
+def invert_differenced_series(data):
+  """
+  This function inverts a differenced time series using cumulative summation.
+
+  Args:
+      data: A list of numerical values representing the differenced time series.
+
+  Returns:
+      The original time series.
+  """
+  inverted_data = [data[0]]
+  for value in data[1:]:
+    inverted_data.append(inverted_data[-1] + value)
+  return inverted_data
+
+# Example usage
+differenced_data = [10, 2, 5, -1]  # Sample differenced series
+original_data = invert_differenced_series(differenced_data)
+print(original_data)  # Output: [10, 12, 17, 16]
+
+
 # linear filters of a time series 
 import numpy as np
 from scipy.signal import filtfilt, butter, iirfilter
