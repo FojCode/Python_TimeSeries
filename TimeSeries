@@ -22,7 +22,15 @@ def autocorrelation(data, max_lag=None):
     if lag == 0:
       autocorr[lag] = 1.0  # Autocorrelation at lag 0 is always 1
     else:
-      
+      autocorr[lag] = np.sum((data[:-lag] - mean) * (data[lag:] - mean)) / (n - lag) / np.var(data)
+
+  return autocorr
+
+# Example usage
+data = np.random.rand(100)  # Generate some random data
+autocorr = autocorrelation(data, max_lag=20)
+
+print(autocorr)  # This will print the autocorrelation values for lags 0 to 19
 
 
 # autocorrelation for arma(1,1)
