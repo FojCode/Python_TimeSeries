@@ -1,3 +1,30 @@
+# autocorrelation function of a time series 
+import numpy as np
+
+def autocorrelation(data, max_lag=None):
+  """
+  This function calculates the autocorrelation of a time series data for a given maximum lag.
+
+  Args:
+      data: A numpy array containing the time series data.
+      max_lag (int, optional): The maximum lag for which to compute the autocorrelation. 
+          Defaults to None (calculates autocorrelation for all lags).
+
+  Returns:
+      A numpy array containing the autocorrelation values for each lag.
+  """
+
+  n = len(data)
+  mean = np.mean(data)
+  autocorr = np.zeros(max_lag or n)
+
+  for lag in range(max_lag or n):
+    if lag == 0:
+      autocorr[lag] = 1.0  # Autocorrelation at lag 0 is always 1
+    else:
+      
+
+
 # autocorrelation for arma(1,1)
 import numpy as np
 
