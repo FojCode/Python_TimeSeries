@@ -1,3 +1,28 @@
+# partial autocorrelation function 
+import numpy as np
+from statsmodels.tsa.stattools import pacf
+
+def partial_autocorrelation(data, max_lag=None):
+  """
+  Calculates the partial autocorrelation (PACF) of a time series data for a given maximum lag.
+
+  Args:
+      data: A numpy array containing the time series data.
+      max_lag (int, optional): The maximum lag for which to compute the PACF. 
+          Defaults to None (calculates PACF for all lags).
+
+  Returns:
+      A numpy array containing the PACF values for each lag.
+  """
+
+  pacf_values = pacf(data, nlags=max_lag, method='ols')
+  return pacf_values
+
+# Example usage
+data = np.random.rand(100)  # Generate some random data
+pacf = partial_autocorrelation(data, max_lag=20)
+
+
 # partial autocorrelation function for ma(1)
 
 import numpy as np
