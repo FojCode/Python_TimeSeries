@@ -1,0 +1,60 @@
+
+# Ljung and Box portmanteau test of residuals 
+
+
+# Turning point test 
+def turning_points(data):
+  """
+  This function calculates the number of turning points in a time series.
+
+  Args:
+      data: A list of numerical values representing the time series.
+
+  Returns:
+      The number of turning points in the data.
+  """
+  turning_points = 0
+  for i in range(2, len(data)):
+    if (data[i-1] < data[i] and data[i] > data[i+1]) or (data[i-1] > data[i] and data[i] < data[i+1]):
+      turning_points += 1
+  return turning_points
+
+def turning_point_test(data, alpha=0.05):
+  """
+  This function performs the turning point test on a time series.
+
+  Args:
+      data: A list of numerical values representing the time series.
+      alpha: The significance level for the test (default 0.05).
+
+  Returns:
+      A tuple containing:
+          - The test statistic (number of turning points)
+          - The p-value
+          - True if the null hypothesis is rejected (data not random)
+  """
+  n = len(data)
+  expected_turning_points = (n - 2) * 2 / 3
+  variance = 8 * n / 45
+  test_statistic = turning_points(data)
+  z_score = (test_statistic - expected_turning_points) / np.sqrt(variance)
+  p_value = 1 - (1 - np.erf(z_score / np.sqrt(2))) / 2
+  reject_null = p_value < alpha
+  return test_statistic, p_value, reject_null
+
+# Example usage
+import numpy as np
+
+# Sample time series data
+data = np.random.rand(100)
+
+# Perform the turning point test
+test_statistic, p_value, reject_null = turning_point_test(data)
+
+print(f"Test statistic: {test_statistic}")
+print(f"p-value: {p_value}")
+
+if reject_null:
+  print("Reject null hypothesis: The data is not random at a significance level of {alpha}.")
+else:
+  print("Fail to reject null hypothesis: The data may be random.")
