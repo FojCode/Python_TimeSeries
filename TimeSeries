@@ -1,5 +1,41 @@
 
+# linear filters of a time series 
+
+
 # Ljung and Box portmanteau test of residuals 
+import statsmodels.api as sm
+
+def arma_ljungbox_test(data, p, q, lags=None):
+  """
+  This function fits an ARMA(p,q) model to the data and performs the Ljung-Box test on the residuals.
+
+  Args:
+      data: A list of numerical values representing the time series.
+      p: The AR order of the model.
+      q: The MA order of the model.
+      lags: The number of lags to test (default None, uses a rule based on data length).
+
+  Returns:
+      A tuple containing:
+          - The Ljung-Box test statistic
+          - The p-value for the Ljung-Box test
+  """
+  model = sm.tsa.ARMA(data, (p, q)).fit(disp=-1)
+  lb_results = sm.stats.acorr_ljungbox(model.resid, lags=lags)
+  return lb_results.lb_stat[0], lb_results.lb_pvalue[0]
+
+# Example usage
+data = [....]  # Replace with your actual time series data
+p = 1  # AR order (adjust as needed)
+q = 1  # MA order (adjust as needed)
+lags = 10  # Number of lags to test (optional)
+
+lb_stat, lb_pvalue = arma_ljungbox_test(data, p, q, lags)
+
+print(f"Ljung-Box test statistic: {lb_stat}")
+print(f"Ljung-Box p-value: {lb_pvalue}")
+
+# For Box-Pierce test, use boxpierce=True in acorr_ljungbox function
 
 
 # Turning point test 
